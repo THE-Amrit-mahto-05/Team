@@ -1,15 +1,32 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useMemo } from "react";
+import Image from "next/image";
+
+interface TeamMember {
+  id: string;
+  name: string;
+  role: string;
+  bio: string;
+  photo_url: string;
+  linkedin?: string;
+}
 
 interface TeamNodeProps {
-  member: any;
+  member: TeamMember;
   x: string | number;
   y: string | number;
   delay?: number;
 }
 
 export default function TeamNode({ member, x, y, delay = 0 }: TeamNodeProps) {
+  const randomDelay = useMemo(() => {
+    // Use a simple hash of the member name to get a stable "random" delay
+    const seed = member.name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return (seed % 20) / 10; // Result between 0 and 2
+  }, [member.name]);
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0 }}
@@ -32,14 +49,16 @@ export default function TeamNode({ member, x, y, delay = 0 }: TeamNodeProps) {
           duration: 4,
           repeat: Infinity,
           ease: "easeInOut",
-          delay: Math.random() * 2
+          delay: randomDelay
         }}
         className="relative"
       >
         <div className="w-20 h-20 rounded-full border-2 border-white/10 overflow-hidden bg-zinc-900 group-hover:border-white/40 transition-colors duration-500 shadow-xl group-hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-          <img
+          <Image
             src={member.photo_url}
             alt={member.name}
+            width={80}
+            height={80}
             className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
           />
         </div>

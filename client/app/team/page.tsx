@@ -4,9 +4,18 @@ import { useEffect, useState } from "react"
 import { getTeam } from "@/lib/api"
 import HorizontalScrollSection from "@/components/HorizontalScrollSection"
 
+interface TeamMember {
+  id: string;
+  name: string;
+  role: string;
+  bio: string;
+  photo_url: string;
+  linkedin?: string;
+}
+
 export default function TeamPage() {
 
-  const [team, setTeam] = useState([])
+  const [team, setTeam] = useState<TeamMember[]>([])
 
   useEffect(() => {
     getTeam().then(res => setTeam(res.data)).catch(err => console.error("Could not fetch team:", err))

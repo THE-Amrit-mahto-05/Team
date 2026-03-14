@@ -2,11 +2,12 @@
 
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { useRef } from "react";
+import { TeamMember } from "@/lib/api";
 import ThreadMember from "./ThreadMember";
 import ThreadConnection from "./ThreadConnection";
 
 interface HorizontalScrollSectionProps {
-  team: any[];
+  team: TeamMember[];
 }
 
 export default function HorizontalScrollSection({ team }: HorizontalScrollSectionProps) {
@@ -113,7 +114,6 @@ export default function HorizontalScrollSection({ team }: HorizontalScrollSectio
                     startY={startY}
                     endX={endX}
                     endY={endY}
-                    index={index}
                     scrollYProgress={scrollYProgress}
                     startRange={startRange}
                     endRange={endRange}

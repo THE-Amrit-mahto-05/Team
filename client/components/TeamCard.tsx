@@ -1,8 +1,10 @@
 "use client"
 
 import { motion } from "framer-motion"
+import Image from "next/image"
+import { TeamMember } from "@/lib/api"
 
-export default function TeamCard({ member }: { member: any }) {
+export default function TeamCard({ member }: { member: TeamMember }) {
   return (
     <motion.div
       data-cursor-hover="true"
@@ -10,8 +12,10 @@ export default function TeamCard({ member }: { member: any }) {
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
       className="border border-white/10 rounded-xl p-6 bg-black/50 backdrop-blur-sm hover:bg-white/5 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-colors duration-300"
     >
-      <img
+      <Image
         src={member.photo_url}
+        width={96}
+        height={96}
         className="w-24 h-24 rounded-full object-cover"
         alt={member.name}
       />

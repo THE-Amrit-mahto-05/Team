@@ -1,9 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
+
+interface TeamMember {
+  id: string;
+  name: string;
+  role: string;
+  bio: string;
+  photo_url: string;
+  linkedin?: string;
+}
 
 interface ThreadMemberProps {
-  member: any;
+  member: TeamMember;
   yOffset: number;
   index: number;
 }
@@ -35,9 +45,11 @@ export default function ThreadMember({ member, yOffset, index }: ThreadMemberPro
         >
           <div className="w-40 h-40 rounded-full border-2 border-white/5 bg-zinc-950 overflow-hidden p-1 group-hover:border-white/20 transition-all duration-700 shadow-2xl relative">
             <div className="w-full h-full rounded-full overflow-hidden relative grayscale group-hover:grayscale-0 transition-all duration-700">
-              <img
+              <Image
                 src={member.photo_url}
                 alt={member.name}
+                width={160}
+                height={160}
                 className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-700 scale-110 group-hover:scale-100"
               />
             </div>

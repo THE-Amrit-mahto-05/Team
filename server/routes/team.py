@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from models import TeamMember
 from database import team_members
 import uuid
@@ -24,7 +24,7 @@ def update_member(member_id: str, member: TeamMember):
             member.id = member_id
             team_members[i] = member
             return member
-    return {"error": "Member not found"}
+    raise HTTPException(status_code=404, detail="Member not found")
 
 
 @router.delete("/team/{member_id}")
@@ -34,4 +34,4 @@ def delete_member(member_id: str):
             team_members.pop(i)
             return {"message": "Deleted"}
 
-    return {"error": "Member not found"}
+    raise HTTPException(status_code=404, detail="Member not found")

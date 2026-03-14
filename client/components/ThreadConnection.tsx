@@ -1,12 +1,12 @@
-import { motion, useTransform } from "framer-motion";
+import { motion, useTransform, MotionValue } from "framer-motion";
+import { useMemo } from "react";
 
 interface ThreadConnectionProps {
   startX: number;
   startY: number;
   endX: number;
   endY: number;
-  index: number;
-  scrollYProgress: any;
+  scrollYProgress: MotionValue<number>;
   startRange: number;
   endRange: number;
 }
@@ -16,14 +16,19 @@ export default function ThreadConnection({
   startY,
   endX,
   endY,
-  index,
   scrollYProgress,
   startRange,
   endRange
 }: ThreadConnectionProps) {
-  const pathLength = useTransform(scrollYProgress, [startRange, endRange], [0, 1]);
   const midX = startX + (endX - startX) / 2;
   const path = `M ${startX} ${startY} L ${midX} ${startY} L ${midX} ${endY} L ${endX} ${endY}`;
+
+  const randomDelay = useMemo(() => {
+    const seed = path.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return (seed % 20) / 10;
+  }, [path]);
+
+  const pathLength = useTransform(scrollYProgress, [startRange, endRange], [0, 1]);
 
   return (
     <g>
@@ -56,7 +61,7 @@ export default function ThreadConnection({
           duration: 2.5,
           repeat: Infinity,
           ease: "linear",
-          delay: Math.random() * 2
+          delay: randomDelay
         }}
         style={{ offsetPath: `path('${path}')` }}
       >
