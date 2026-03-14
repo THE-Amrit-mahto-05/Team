@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { useEffect, useState, useMemo, useRef } from "react";
+import { motion, useMotionValue, useSpring, useTransform, MotionValue } from "framer-motion";
+import { useEffect, useMemo, useRef } from "react";
 
 const createRandom = (seed: number) => {
   let s = seed;
@@ -11,24 +11,18 @@ const createRandom = (seed: number) => {
   };
 };
 
-interface Node {
-  id: number;
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-}
-
-const NeuralWeave = ({ mouseX, mouseY }: { mouseX: any; mouseY: any }) => {
+const NeuralWeave = ({ mouseX, mouseY }: { mouseX: MotionValue<number>; mouseY: MotionValue<number> }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  
   const nodes = useMemo(() => {
-    const random = createRandom(42);
-    return Array.from({ length: 50 }).map((_, i) => ({
+    const random = createRandom(1337);
+    return Array.from({ length: 60 }).map((_, i) => ({
       id: i,
       x: random() * 100,
       y: random() * 100,
-      vx: (random() - 0.5) * 0.05,
-      vy: (random() - 0.5) * 0.05,
+      vx: (random() - 0.5) * 0.04,
+      vy: (random() - 0.5) * 0.04,
+      packets: [] as { progress: number; targetIdx: number; t: number }[]
     }));
   }, []);
 
@@ -39,19 +33,32 @@ const NeuralWeave = ({ mouseX, mouseY }: { mouseX: any; mouseY: any }) => {
     if (!ctx) return;
 
     let animationFrame: number;
-    const currentNodes = [...nodes];
+    let time = 0;
 
     const render = () => {
+      time += 0.01;
       const w = canvas.width = window.innerWidth;
       const h = canvas.height = window.innerHeight;
       ctx.clearRect(0, 0, w, h);
-      ctx.strokeStyle = "rgba(100, 200, 255, 0.15)";
-      ctx.fillStyle = "rgba(100, 200, 255, 0.5)";
-
+      
       const mx = (mouseX.get() + w / 2);
       const my = (mouseY.get() + h / 2);
 
-      currentNodes.forEach((node, i) => {
+      // Background Synergy Hub Pulse
+      const hubSize = 200 + Math.sin(time) * 20;
+      const gradient = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, hubSize);
+      gradient.addColorStop(0, "rgba(74, 175, 255, 0.05)");
+      gradient.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, w, h);
+
+      nodes.forEach((node, i) => {
+        // Subtle drift toward center (Growth/Synergy)
+        const dx = 50 - node.x;
+        const dy = 50 - node.y;
+        node.vx += dx * 0.0001;
+        node.vy += dy * 0.0001;
+
         node.x += node.vx;
         node.y += node.vy;
 
@@ -61,32 +68,58 @@ const NeuralWeave = ({ mouseX, mouseY }: { mouseX: any; mouseY: any }) => {
         const nx = (node.x / 100) * w;
         const ny = (node.y / 100) * h;
 
-        // Draw connections
-        currentNodes.forEach((node2, j) => {
-          if (i === j) return;
+        // Connections & Data Packets
+        nodes.forEach((node2, j) => {
+          if (i <= j) return;
           const n2x = (node2.x / 100) * w;
           const n2y = (node2.y / 100) * h;
           const dist = Math.hypot(nx - n2x, ny - n2y);
-          if (dist < 200) {
+          
+          if (dist < 250) {
             ctx.beginPath();
-            ctx.lineWidth = (1 - dist / 200) * 0.5;
+            ctx.strokeStyle = `rgba(100, 200, 255, ${0.1 * (1 - dist / 250)})`;
+            ctx.lineWidth = 0.5;
             ctx.moveTo(nx, ny);
             ctx.lineTo(n2x, n2y);
             ctx.stroke();
+
+            // Symbolic Data Packet (Collaborative Flow)
+            if (Math.random() < 0.001) {
+              node.packets.push({ progress: 0, targetIdx: j, t: Math.random() });
+            }
           }
         });
 
-        // Mouse interaction
-        const mDist = Math.hypot(nx - mx, ny - my);
-        if (mDist < 300) {
+        // Render Packets
+        node.packets = node.packets.filter(p => {
+          p.progress += 0.01;
+          const targetNode = nodes[p.targetIdx];
+          const tx = (targetNode.x / 100) * w;
+          const ty = (targetNode.y / 100) * h;
+          
+          const px = nx + (tx - nx) * p.progress;
+          const py = ny + (ty - ny) * p.progress;
+
           ctx.beginPath();
-          ctx.lineWidth = (1 - mDist / 300) * 0.8;
+          ctx.fillStyle = `rgba(255, 255, 255, ${Math.sin(p.progress * Math.PI)})`;
+          ctx.arc(px, py, 1.5, 0, Math.PI * 2);
+          ctx.fill();
+
+          return p.progress < 1;
+        });
+
+        // Mouse reactive lines
+        const mDist = Math.hypot(nx - mx, ny - my);
+        if (mDist < 250) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(100, 200, 255, ${0.4 * (1 - mDist / 250)})`;
           ctx.moveTo(nx, ny);
           ctx.lineTo(mx, my);
           ctx.stroke();
         }
 
         ctx.beginPath();
+        ctx.fillStyle = "rgba(100, 200, 255, 0.3)";
         ctx.arc(nx, ny, 1, 0, Math.PI * 2);
         ctx.fill();
       });
@@ -98,14 +131,14 @@ const NeuralWeave = ({ mouseX, mouseY }: { mouseX: any; mouseY: any }) => {
     return () => cancelAnimationFrame(animationFrame);
   }, [nodes, mouseX, mouseY]);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none opacity-40" />;
+  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />;
 };
 
 export default function IntroAnimation() {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const springX = useSpring(mouseX, { damping: 30, stiffness: 100 });
-  const springY = useSpring(mouseY, { damping: 30, stiffness: 100 });
+  const springX = useSpring(mouseX, { damping: 40, stiffness: 80 });
+  const springY = useSpring(mouseY, { damping: 40, stiffness: 80 });
 
   useEffect(() => {
     const handleMouse = (e: MouseEvent) => {
@@ -116,69 +149,72 @@ export default function IntroAnimation() {
     return () => window.removeEventListener("mousemove", handleMouse);
   }, [mouseX, mouseY]);
 
-  const textX = useTransform(springX, (v) => v * 0.03);
-  const textY = useTransform(springY, (v) => v * 0.03);
+  const textX = useTransform(springX, (v) => v * 0.04);
+  const textY = useTransform(springY, (v) => v * 0.04);
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 1.2 }}
+      transition={{ duration: 1.5 }}
       className="absolute inset-0 z-0 bg-black flex items-center justify-center overflow-hidden cursor-none"
     >
       <NeuralWeave mouseX={springX} mouseY={springY} />
 
-      {/* Synergistic Glow Layers */}
+      {/* Central Core (Symbolic Hub) */}
       <motion.div
         animate={{ 
-          scale: [1, 1.1, 1],
-          opacity: [0.1, 0.2, 0.1] 
+          scale: [1, 1.2, 1],
+          opacity: [0.2, 0.4, 0.2],
+          boxShadow: [
+            "0 0 100px rgba(74, 175, 255, 0.1)",
+            "0 0 150px rgba(74, 175, 255, 0.3)",
+            "0 0 100px rgba(74, 175, 255, 0.1)"
+          ]
         }}
-        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-        className="absolute w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-[120px]"
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute w-4 h-4 bg-blue-500 rounded-full blur-[2px] z-10"
       />
 
       <motion.div
         style={{ x: textX, y: textY }}
-        className="relative z-10 text-center"
+        className="relative z-20 text-center"
       >
         <motion.div
-          initial={{ letterSpacing: "1em", opacity: 0, filter: "blur(20px)" }}
-          animate={{ letterSpacing: "-0.05em", opacity: 1, filter: "blur(0px)" }}
-          transition={{ duration: 2.5, ease: "easeOut" }}
+          initial={{ opacity: 0, scale: 0.8, filter: "blur(40px)" }}
+          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          transition={{ duration: 3, ease: [0.16, 1, 0.3, 1] }}
           className="relative"
         >
-          <h1 className="text-8xl md:text-[14rem] font-black text-white uppercase italic tracking-[-0.05em] select-none leading-none">
+          {/* Main Title with Energy Glow */}
+          <h1 className="text-8xl md:text-[15rem] font-black text-white uppercase italic tracking-[-0.05em] select-none leading-tight mix-blend-screen drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]">
             OUR TEAM
           </h1>
           
-          {/* Energy Pulses */}
+          {/* Cybernetic Underline Pulse */}
+          <motion.div 
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ delay: 1, duration: 2, ease: "circOut" }}
+            className="h-[2px] w-full bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50 shadow-[0_0_15px_#3b82f6]"
+          />
+
+          {/* Assembly Particles Overlay */}
           <motion.div 
             animate={{ 
-              opacity: [0, 0.5, 0],
-              background: [
-                "linear-gradient(90deg, transparent 0%, #4af 50%, transparent 100%)",
-                "linear-gradient(90deg, transparent 100%, #4af 150%, transparent 200%)"
-              ]
+              opacity: [0, 0.6, 0],
+              background: "radial-gradient(circle at center, rgba(255,255,255,0.8) 0%, transparent 10%)",
+              backgroundSize: "20px 20px"
             }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute inset-0 pointer-events-none mix-blend-overlay"
+            transition={{ duration: 0.1, repeat: Infinity }}
+            className="absolute inset-0 pointer-events-none mix-blend-overlay opacity-30"
           />
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 0.4, y: 0 }}
-          transition={{ delay: 2, duration: 1 }}
-          className="mt-4 text-blue-400 font-mono text-xs uppercase tracking-[0.5em]"
-        >
-          Synergy & Infrastructure Ready
         </motion.div>
       </motion.div>
 
-      {/* Ambient Dust */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grain-y.com/images/grain.png')]" />
+      {/* Vignette */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)]" />
     </motion.div>
   );
 }
