@@ -29,8 +29,6 @@ export default function IntroAnimation() {
       className="absolute inset-0 z-0 bg-black flex items-center justify-center overflow-hidden cursor-none"
     >
       <RobotBackground />
-
-      {/* Central Core Glow - Intense Cinematic Gold */}
       <motion.div
         animate={{
           scale: [1, 1.4, 1],
@@ -50,35 +48,7 @@ export default function IntroAnimation() {
           transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
           className="relative inline-block"
         >
-          {/* Main Title - Extreme High Fidelity Typography - Now White for Black Background */}
-          <h1 className="text-[3rem] md:text-[8rem] font-[1000] text-white uppercase italic tracking-[-0.08em] select-none leading-[0.75] drop-shadow-[0_0_40px_rgba(255,215,0,0.6)]">
-            OUR TEAM
-          </h1>
-
-          {/* Aggressive Cybernetic Underline - Deep Gold */}
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ delay: 0.8, duration: 1.2, ease: "circOut" }}
-            className="h-[3px] w-[95%] mx-auto mt-6 bg-white shadow-[0_0_20px_#ffd700] opacity-90"
-          />
-
-          {/* Shimmer / Glitch Layer - Warm Highlight */}
-          <motion.div
-            animate={{
-              opacity: [0, 0.2, 0.4, 0.1, 0],
-              skewX: [0, -5, 5, -2, 0],
-            }}
-            transition={{
-              duration: 0.15,
-              repeat: Infinity,
-              repeatDelay: 8,
-              ease: "linear"
-            }}
-            className="absolute inset-0 text-[3rem] md:text-[8rem] font-[1000] text-white/10 uppercase italic tracking-[-0.08em] select-none leading-[0.75] opacity-0"
-          >
-            OUR TEAM
-          </motion.div>
+          {/* HTML Title removed as it is now rendered in 3D inside RobotBackground */}
         </motion.div>
       </motion.div>
     </motion.div>

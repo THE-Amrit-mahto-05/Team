@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { PerspectiveCamera, Float } from "@react-three/drei";
+import { PerspectiveCamera, Float, Text3D, Center } from "@react-three/drei";
 import { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
 
@@ -209,6 +209,55 @@ function RobotArm({
   );
 }
 
+
+// Helper function to animate the 3D text (floating slightly and reacting to mouse)
+function AnimatedText3D() {
+  const g = useRef<THREE.Group>(null);
+
+  useFrame(({ clock, mouse }) => {
+    if (g.current) {
+      g.current.position.y = Math.sin(clock.elapsedTime * 2) * 0.1;
+      g.current.rotation.y = THREE.MathUtils.lerp(
+        g.current.rotation.y,
+        mouse.x * 0.15,
+        0.05
+      );
+      g.current.rotation.x = THREE.MathUtils.lerp(
+        g.current.rotation.x,
+        -mouse.y * 0.15,
+        0.05
+      );
+    }
+  });
+
+  return (
+    <group ref={g} position={[1.5, 0, 3]}>
+      <Center>
+        <Text3D
+          font="/helvetiker_bold.typeface.json"
+          size={0.9}
+          height={0.15}
+          curveSegments={12}
+          bevelEnabled
+          bevelThickness={0.02}
+          bevelSize={0.015}
+          bevelOffset={0}
+          bevelSegments={5}
+        >
+          OUR TEAM
+          <meshStandardMaterial
+            color="#e8edf2"
+            metalness={0.8}
+            roughness={0.2}
+            emissive="#00b09b"
+            emissiveIntensity={4}
+          />
+        </Text3D>
+      </Center>
+    </group>
+  );
+}
+
 export default function RobotBackground() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
@@ -248,6 +297,10 @@ export default function RobotBackground() {
         <pointLight position={[11, -6, 3]} intensity={450} color="#d060a0" />
 
         <pointLight position={[-9, -2, 3]} intensity={500} color="#aabbd0" />
+
+        {/* 3D TITLE */}
+        <AnimatedText3D />
+
 
         <Float speed={0.7} rotationIntensity={0.06} floatIntensity={0.18}>
           <group position={[10, -6.5, -2]} rotation={[-0.18, -1.05, 0.22]}>
