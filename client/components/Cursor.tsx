@@ -20,7 +20,7 @@ export default function Cursor() {
   return (
     <div
       ref={cursorRef}
-      className="fixed top-0 left-0 w-6 h-6 rounded-full bg-white pointer-events-none mix-blend-difference z-50 will-change-transform"
+      className="fixed top-0 left-0 w-6 h-6 rounded-full bg-white pointer-events-none mix-blend-difference z-[999] will-change-transform"
       style={{
         transition: "transform 0.1s ease-out",
       }}

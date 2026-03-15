@@ -17,7 +17,7 @@ export default function TeamGraph({ children }: TeamGraphProps) {
       className="relative w-full h-[700px] border-x border-white/5 bg-zinc-950/20 rounded-3xl overflow-visible"
     >
       <div className="absolute inset-0 opacity-[0.05] pointer-events-none"
-           style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '40px 40px' }}
+        style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '40px 40px' }}
       />
       {children}
     </motion.div>
