@@ -46,13 +46,13 @@ export default function HorizontalScrollSection({ team }: HorizontalScrollSectio
   return (
     <div
       ref={containerRef}
-      className="relative bg-black text-white"
+      className="relative text-white"
       style={{ height: `${Math.max(400, team.length * 80)}vh` }}
     >
 
       <motion.div
         style={{ opacity: backgroundOpacity }}
-        className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05),transparent_70%)] pointer-events-none z-0"
+        className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,120,255,0.02),transparent_70%)] pointer-events-none z-0"
       />
 
       <motion.div
@@ -73,7 +73,7 @@ export default function HorizontalScrollSection({ team }: HorizontalScrollSectio
 
       <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-start">
 
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_left_center,rgba(255,255,255,0.03),transparent_70%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_left_center,rgba(0,100,255,0.03),transparent_70%)] pointer-events-none" />
 
         <motion.div
           style={{ x: springX, opacity: contentOpacity }}
@@ -147,7 +147,7 @@ export default function HorizontalScrollSection({ team }: HorizontalScrollSectio
         <div className="absolute bottom-12 left-1/2 -translate-x-1/2 w-64 h-[1px] bg-white/10 overflow-hidden">
           <motion.div
             style={{ scaleX: scrollYProgress }}
-            className="w-full h-full bg-white origin-left"
+            className="w-full h-full bg-blue-500 origin-left"
           />
         </div>
       </div>

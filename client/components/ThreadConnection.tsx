@@ -34,14 +34,14 @@ export default function ThreadConnection({
     <g>
       <path
         d={path}
-        stroke="rgba(255, 255, 255, 0.05)"
+        stroke="rgba(0, 100, 255, 0.1)"
         strokeWidth="1"
         strokeDasharray="4 4"
         fill="transparent"
       />
       <motion.path
         d={path}
-        stroke="rgba(255, 255, 255, 0.4)"
+        stroke="rgba(0, 150, 255, 0.4)"
         strokeWidth="1.5"
         fill="transparent"
         style={{ pathLength, opacity: 1 }}
@@ -54,7 +54,7 @@ export default function ThreadConnection({
 
       <motion.circle
         r="3"
-        fill="white"
+        fill="#0099ff"
         initial={{ offsetDistance: "0%" }}
         animate={{ offsetDistance: "100%" }}
         transition={{
@@ -72,7 +72,7 @@ export default function ThreadConnection({
         cx={startX}
         cy={startY}
         r="2"
-        fill="white"
+        fill="#0099ff"
         initial={{ opacity: 0 }}
         style={{ opacity: pathLength }}
       />
@@ -80,14 +80,14 @@ export default function ThreadConnection({
         cx={endX}
         cy={endY}
         r="2"
-        fill="white"
+        fill="#0099ff"
         initial={{ opacity: 0 }}
         style={{ opacity: pathLength }}
       />
 
       <path
         d={path}
-        stroke="white"
+        stroke="#0099ff"
         strokeWidth="4"
         fill="transparent"
         className="opacity-0 blur-md group-hover:opacity-10 transition-opacity duration-500"

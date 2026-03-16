@@ -43,7 +43,7 @@ export default function ThreadMember({ member, yOffset, index }: ThreadMemberPro
           whileHover={{ scale: 1.3, rotate: 3 }}
           className="relative z-10"
         >
-          <div className="w-40 h-40 rounded-full border-2 border-white/5 bg-zinc-950 overflow-hidden p-1 group-hover:border-white/20 transition-all duration-700 shadow-2xl relative">
+          <div className="w-40 h-40 rounded-full border-2 border-white/5 bg-zinc-950 overflow-hidden p-1 group-hover:border-blue-500/30 transition-all duration-700 shadow-2xl relative">
             <div className="w-full h-full rounded-full overflow-hidden relative grayscale group-hover:grayscale-0 transition-all duration-700">
               <Image
                 src={member.photo_url}
@@ -66,7 +66,7 @@ export default function ThreadMember({ member, yOffset, index }: ThreadMemberPro
               ease: "easeInOut",
               delay: index * 0.3
             }}
-            className="absolute inset-0 bg-white/10 blur-3xl rounded-full -z-10"
+            className="absolute inset-0 bg-blue-500/10 blur-3xl rounded-full -z-10"
           />
         </motion.div>
 

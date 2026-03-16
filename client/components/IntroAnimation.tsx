@@ -31,11 +31,11 @@ export default function IntroAnimation() {
       <RobotBackground />
       <motion.div
         animate={{
-          scale: [1, 1.4, 1],
-          opacity: [0.2, 0.4, 0.2],
+          scale: [1, 1.2, 1],
+          opacity: [0.1, 0.2, 0.1],
         }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute w-96 h-96 bg-[#ffd700]/20 rounded-full blur-[140px] z-10"
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute w-96 h-96 bg-blue-600/10 rounded-full blur-[120px] z-10"
       />
 
       <motion.div

@@ -317,18 +317,6 @@ export default function RobotBackground() {
         <color attach="background" args={["#000000"]} />
       </Canvas>
 
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          top: 0,
-          right: 0,
-          width: "55%",
-          height: "65%",
-          background:
-            "radial-gradient(ellipse at 85% 0%, rgba(200,230,220,0.13) 0%, transparent 60%)",
-          zIndex: 5,
-        }}
-      />
 
       <div
         className="absolute inset-0 pointer-events-none"
