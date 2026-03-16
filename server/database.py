@@ -18,5 +18,4 @@ def save_members(members: List[TeamMember]):
     with open(DATA_FILE, "w") as f:
         json.dump([member.model_dump() for member in members], f, indent=4)
 
-# Global list initialized from file
 team_members = load_members()
