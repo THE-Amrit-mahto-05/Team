@@ -13,3 +13,7 @@ app.add_middleware(
 )
 
 app.include_router(team_router)
+
+@app.get("/")
+def read_root():
+    return {"status": "online", "message": "Armatrix Team API is running"}
