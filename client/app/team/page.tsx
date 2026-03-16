@@ -15,7 +15,7 @@ export default function TeamPage() {
   
   const introOpacity = useTransform(scrollY, [0, 400], [1, 0])
   const introScale = useTransform(scrollY, [0, 400], [1, 0.8])
-  const introPointerEvents = useTransform(scrollY, (v) => v > 300 ? "none" : ("auto" as const))
+  const introPointerEvents = useTransform(scrollY, (v) => v > 50 ? "none" : ("auto" as const))
 
   useEffect(() => {
     getTeam().then(res => setTeam(res.data)).catch(err => console.error("Could not fetch team:", err))
@@ -39,7 +39,7 @@ export default function TeamPage() {
         <IntroAnimation />
       </motion.div>
 
-      <div className="relative z-10">
+      <div className="relative z-[200]">
         {team.length === 0 ? (
           <div className="min-h-screen flex items-center justify-center text-zinc-500 uppercase tracking-widest text-xs">
             Initialising Threads...

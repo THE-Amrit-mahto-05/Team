@@ -147,7 +147,7 @@ export default function HorizontalScrollSection({ team }: HorizontalScrollSectio
                 return (
                   <div
                     key={member.id}
-                    className="absolute top-0"
+                    className="absolute top-0 h-full"
                     style={{
                       width: stepWidth,
                       left: index * stepWidth
