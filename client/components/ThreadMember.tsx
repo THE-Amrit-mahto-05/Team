@@ -1,7 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { useState } from "react";
+import BinaryRain from "./BinaryRain";
 
 interface TeamMember {
   id: string;
@@ -19,6 +21,7 @@ interface ThreadMemberProps {
 }
 
 export default function ThreadMember({ member, yOffset, index }: ThreadMemberProps) {
+  const [isHovered, setIsHovered] = useState(false);
   const centerY = 350;
 
   return (
@@ -31,29 +34,43 @@ export default function ThreadMember({ member, yOffset, index }: ThreadMemberPro
         ease: [0.16, 1, 0.3, 1]
       }}
       viewport={{ once: true }}
-      className="absolute group z-10"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="absolute group z-[150] cursor-pointer"
       style={{
-        left: "calc(40% - 27px)",
-        top: `${centerY + yOffset - 37}px`,
+        left: "calc(45% - 50px)",
+        top: `${centerY + yOffset - 10}px`,
         transform: "translate(-50%, -50%)"
       }}
     >
       <div className="relative">
         <motion.div
-          whileHover={{ scale: 1.3, rotate: 3 }}
+          whileHover={{ scale: 1.15, rotate: 1 }}
           className="relative z-10"
         >
-          <div className="w-40 h-40 rounded-full border-2 border-white/5 bg-zinc-950 overflow-hidden p-1 group-hover:border-teal-500/30 transition-all duration-700 shadow-2xl relative">
-            <div className="w-full h-full rounded-full overflow-hidden relative grayscale group-hover:grayscale-0 transition-all duration-700">
-              <Image
-                src={member.photo_url}
-                alt={member.name}
-                width={160}
-                height={160}
-                className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-700 scale-110 group-hover:scale-100"
-              />
+          <div className="w-40 h-40 rounded-full border-2 border-teal-500/20 bg-zinc-950 overflow-hidden p-1 group-hover:border-teal-400/50 transition-all duration-500 shadow-2xl relative">
+            <AnimatePresence>
+              {isHovered && <BinaryRain key="binary-rain" />}
+            </AnimatePresence>
+
+            <div className={`w-full h-full rounded-full overflow-hidden relative transition-all duration-700 ${isHovered ? 'animate-pulse' : ''}`}>
+              <div className={isHovered ? 'glitch-image' : ''}>
+                <Image
+                  src={member.photo_url}
+                  alt={member.name}
+                  width={160}
+                  height={160}
+                  className="w-full h-full object-cover opacity-100 transition-all duration-700 scale-110 group-hover:scale-100"
+                />
+              </div>
             </div>
           </div>
+
+          {/* Cyber Brackets */}
+          <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-teal-500/0 group-hover:border-teal-400/60 transition-all duration-500 -translate-x-2 -translate-y-2" />
+          <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-teal-500/0 group-hover:border-teal-400/60 transition-all duration-500 translate-x-2 -translate-y-2" />
+          <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-teal-500/0 group-hover:border-teal-400/60 transition-all duration-500 -translate-x-2 translate-y-2" />
+          <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-teal-500/0 group-hover:border-teal-400/60 transition-all duration-500 translate-x-2 translate-y-2" />
 
           <motion.div
             animate={{
@@ -71,11 +88,14 @@ export default function ThreadMember({ member, yOffset, index }: ThreadMemberPro
         </motion.div>
 
         <div className="absolute top-[calc(100%+1.5rem)] left-1/2 -translate-x-1/2 text-center w-64 pointer-events-none">
-          <motion.h3 className="text-white text-lg font-medium tracking-tight">
-            {member.name}
-          </motion.h3>
-          <motion.p className="text-zinc-500 text-[10px] uppercase tracking-[0.2em] mt-1">
-            {member.role}
+          <motion.div className="flex items-center justify-center gap-2">
+            {isHovered && <span className="text-[10px] text-teal-500/60 font-mono animate-pulse">[SECURE]</span>}
+            <h3 className="text-white text-lg font-medium tracking-tight">
+              {member.name}
+            </h3>
+          </motion.div>
+          <motion.p className="text-teal-500/50 text-[10px] font-mono uppercase tracking-[0.2em] mt-1">
+            {isHovered ? `>> ${member.role} <<` : member.role}
           </motion.p>
         </div>
 

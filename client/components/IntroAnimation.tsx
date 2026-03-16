@@ -26,7 +26,7 @@ export default function IntroAnimation() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 1.5 }}
-      className="absolute inset-0 z-0 bg-black flex items-center justify-center overflow-hidden cursor-none"
+      className="absolute inset-0 z-0 bg-black flex items-center justify-center overflow-hidden"
     >
       <RobotBackground />
       <motion.div

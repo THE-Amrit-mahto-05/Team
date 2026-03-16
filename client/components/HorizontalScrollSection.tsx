@@ -43,6 +43,23 @@ export default function HorizontalScrollSection({ team }: HorizontalScrollSectio
   const backgroundOpacity = useTransform(scrollYProgress, [0.02, 0.1], [0, 1]);
   const contentOpacity = useTransform(scrollYProgress, [0.03, 0.12], [0, 1]);
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
+
+  if (isMobile) {
+    return (
+      <div className="relative pt-32 pb-20 px-6 max-w-lg mx-auto overflow-visible">
+        <h1 className="text-6xl font-bold tracking-tighter uppercase mb-16 text-center">OUR TEAM</h1>
+        <div className="flex flex-col gap-40 items-center">
+          {team.map((member, index) => (
+            <div key={member.id} className="relative h-[200px] w-full flex items-center justify-center">
+               <ThreadMember member={member} yOffset={0} index={index} />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       ref={containerRef}
