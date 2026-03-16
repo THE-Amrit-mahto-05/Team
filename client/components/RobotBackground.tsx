@@ -231,7 +231,7 @@ function AnimatedText3D() {
   });
 
   return (
-    <group ref={g} position={[0.5, 0, 3]}>
+    <group ref={g} position={[0, 0, 3]}>
       <Center>
         <Text3D
           font="/helvetiker_bold.typeface.json"
