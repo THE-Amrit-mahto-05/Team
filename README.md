@@ -12,17 +12,15 @@ A cinematic, interactive Team Page built for Armatrix. Featuring a 3D robotic ba
 
 ### Backend (FastAPI)
 1. `cd server`
-2. `python -m venv venv`
-3. `source venv/bin/activate` (Mac/Linux) or `venv\Scripts\activate` (Windows)
-4. `pip install -r requirements.txt`
-5. `uvicorn main:app --reload --port 8000`
+2. `npm install`
+3. `npm run dev`
    - Access API at `http://127.0.0.1:8000`
    - Interactive Docs: `http://127.0.0.1:8000/docs`
 
 ### Frontend (Next.js)
 1. `cd client`
 2. `npm install`
-3. Create a `.env.local` file and add: `NEXT_PUBLIC_API_URL=http://127.0.0.1:8000`
+3. Create a `.env` file and add: `NEXT_PUBLIC_API_URL=http://127.0.0.1:8000`
 4. `npm run dev`
    - Access Team Page: `http://localhost:3000/team`
    - Access Admin Dashboard: `http://localhost:3000/admin`
