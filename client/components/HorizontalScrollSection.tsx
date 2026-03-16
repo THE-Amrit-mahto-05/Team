@@ -99,10 +99,36 @@ export default function HorizontalScrollSection({ team }: HorizontalScrollSectio
         >
           <div className="relative flex items-center ml-[20vw] pr-[20vw]">
 
+            {/* Decorative Background "Ghost" Network */}
             <svg
               width={team.length * stepWidth}
               height="700"
-              className="absolute top-0 left-0 pointer-events-none z-0"
+              className="absolute top-0 left-0 pointer-events-none opacity-20 z-0"
+            >
+              {Array.from({ length: team.length + 5 }).map((_, i) => (
+                <g key={`ghost-${i}`}>
+                   <circle 
+                    cx={i * stepWidth * 0.8} 
+                    cy={centerY + (i % 3 - 1) * 220} 
+                    r="1.5" 
+                    fill="rgba(0, 212, 192, 0.2)" 
+                  />
+                  <line 
+                    x1={i * stepWidth * 0.8} 
+                    y1={centerY + (i % 3 - 1) * 220} 
+                    x2={(i + 1) * stepWidth * 0.8} 
+                    y2={centerY + ((i+1) % 5 - 2) * 180} 
+                    stroke="rgba(0, 212, 192, 0.05)" 
+                    strokeWidth="0.5" 
+                  />
+                </g>
+              ))}
+            </svg>
+
+            <svg
+              width={team.length * stepWidth}
+              height="700"
+              className="absolute top-0 left-0 pointer-events-none z-10"
             >
               {team.map((_, index) => {
                 if (index === 0) return null;

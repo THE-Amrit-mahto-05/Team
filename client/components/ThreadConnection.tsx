@@ -32,16 +32,28 @@ export default function ThreadConnection({
 
   return (
     <g>
+      {/* Background Track (Very Faint) */}
       <path
         d={path}
-        stroke="rgba(0, 100, 255, 0.1)"
+        stroke="rgba(0, 150, 255, 0.05)"
         strokeWidth="1"
-        strokeDasharray="4 4"
         fill="transparent"
       />
+      
+      {/* The Glow Underlay */}
       <motion.path
         d={path}
-        stroke="rgba(0, 150, 255, 0.4)"
+        stroke="rgba(0, 150, 255, 0.2)"
+        strokeWidth="4"
+        fill="transparent"
+        className="blur-sm"
+        style={{ pathLength, opacity: 1 }}
+      />
+
+      {/* The Primary Laser Path */}
+      <motion.path
+        d={path}
+        stroke="rgba(0, 230, 255, 0.5)"
         strokeWidth="1.5"
         fill="transparent"
         style={{ pathLength, opacity: 1 }}
@@ -52,45 +64,46 @@ export default function ThreadConnection({
         }}
       />
 
-      <motion.circle
-        r="3"
-        fill="#0099ff"
-        initial={{ offsetDistance: "0%" }}
-        animate={{ offsetDistance: "100%" }}
-        transition={{
-          duration: 2.5,
-          repeat: Infinity,
-          ease: "linear",
-          delay: randomDelay
-        }}
-        style={{ offsetPath: `path('${path}')` }}
-      >
-        <animate attributeName="opacity" values="0;1;0" dur="2.5s" repeatCount="indefinite" />
-      </motion.circle>
+      {/* Multiple Data Pulses */}
+      {[0, 1, 2].map((i) => (
+        <motion.circle
+          key={`pulse-${i}`}
+          r={1.5 + i * 0.5}
+          fill="#00e6ff"
+          className="blur-[1px]"
+          initial={{ offsetDistance: "0%" }}
+          animate={{ offsetDistance: "100%" }}
+          transition={{
+            duration: 2 + i * 0.5,
+            repeat: Infinity,
+            ease: "linear",
+            delay: randomDelay + i * 0.8
+          }}
+          style={{ 
+            offsetPath: `path('${path}')`,
+            opacity: useTransform(pathLength, [0.3, 1], [0, 1])
+          }}
+        />
+      ))}
 
+      {/* End Junction Points */}
       <motion.circle
         cx={startX}
         cy={startY}
-        r="2"
-        fill="#0099ff"
+        r="3"
+        fill="#00e6ff"
+        className="blur-[2px]"
         initial={{ opacity: 0 }}
         style={{ opacity: pathLength }}
       />
       <motion.circle
         cx={endX}
         cy={endY}
-        r="2"
-        fill="#0099ff"
+        r="3"
+        fill="#00e6ff"
+        className="blur-[2px]"
         initial={{ opacity: 0 }}
         style={{ opacity: pathLength }}
-      />
-
-      <path
-        d={path}
-        stroke="#0099ff"
-        strokeWidth="4"
-        fill="transparent"
-        className="opacity-0 blur-md group-hover:opacity-10 transition-opacity duration-500"
       />
     </g>
   );
