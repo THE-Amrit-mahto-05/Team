@@ -41,22 +41,19 @@ export default function ThreadMember({ member, yOffset, index }: ThreadMemberPro
     >
       <div className="relative w-full h-full">
         <motion.div
-          whileHover={{ scale: 1.15, rotate: 1 }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           className="relative z-10 group w-full h-full rounded-full cursor-pointer pointer-events-auto"
         >
           <div className="w-40 h-40 rounded-full border-2 border-teal-500/20 bg-zinc-950 overflow-hidden p-1 group-hover:border-teal-400/50 transition-all duration-500 shadow-2xl relative">
-            <div className={`w-full h-full rounded-full overflow-hidden relative transition-all duration-700 ${isHovered ? 'animate-pulse' : ''} opacity-100`}>
-              <div className={isHovered ? 'glitch-image' : ''}>
-                <Image
-                  src={member.photo_url}
-                  alt={member.name}
-                  width={160}
-                  height={160}
-                  className="w-full h-full object-cover transition-all duration-700 scale-110 group-hover:scale-100"
-                />
-              </div>
+            <div className="w-full h-full rounded-full overflow-hidden relative transition-all duration-700 opacity-100">
+              <Image
+                src={member.photo_url}
+                alt={member.name}
+                width={160}
+                height={160}
+                className="w-full h-full object-cover transition-all duration-700"
+              />
             </div>
           </div>
 
@@ -142,7 +139,7 @@ export default function ThreadMember({ member, yOffset, index }: ThreadMemberPro
                     transition={{ delay: 0.1 }}
                   >
                     <span className="text-[10px] text-teal-500/60 font-mono tracking-widest uppercase mb-1 block">
-                      Node Identity Detected
+                      Identity
                     </span>
                     <h3 className="text-xl font-bold tracking-tight text-white leading-tight uppercase">
                       {member.name}
@@ -185,16 +182,7 @@ export default function ThreadMember({ member, yOffset, index }: ThreadMemberPro
                     </p>
                   </motion.div>
                   
-                  <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.4 }}
-                    className="pt-2 flex justify-end"
-                  >
-                    <div className="text-[9px] text-teal-500/40 font-mono uppercase">
-                      Auth Level: Root
-                    </div>
-                  </motion.div>
+                  {/* Auth Level Removed */}
                 </div>
 
                 {/* Corner Accents inside card */}

@@ -38,22 +38,34 @@ function FingerSegment({
 
 function RoboticHand({ grip = 0.25, teal = false }: any) {
   const g = useRef<THREE.Group>(null);
+  const fingersRef = useRef<THREE.Group[]>([]);
   const palmColor = "#e8edf2";
   const accentColor = "#c8d0d8";
 
   useFrame(({ clock, mouse }) => {
     if (!g.current) return;
     const t = clock.elapsedTime;
+    
+    // Increased rotation sensitivity
     g.current.rotation.x = THREE.MathUtils.lerp(
       g.current.rotation.x,
-      Math.sin(t * 0.45) * 0.13 + mouse.y * 0.25,
-      0.08
+      Math.sin(t * 0.45) * 0.13 + mouse.y * 0.45,
+      0.06
     );
     g.current.rotation.y = THREE.MathUtils.lerp(
       g.current.rotation.y,
-      Math.cos(t * 0.35) * 0.1 + mouse.x * 0.25,
-      0.08
+      Math.cos(t * 0.35) * 0.1 + mouse.x * 0.45,
+      0.06
     );
+
+    // Dynamic grip: Fingers close slightly when mouse is low
+    const targetGrip = 0.2 + (mouse.y + 1) * 0.15;
+    const currentGrip = THREE.MathUtils.lerp(g.current.userData.grip || 0.25, targetGrip, 0.05);
+    g.current.userData.grip = currentGrip;
+
+    fingersRef.current.forEach((f, i) => {
+      if (f) f.rotation.x = currentGrip + i * 0.04;
+    });
   });
 
   return (
@@ -86,7 +98,12 @@ function RoboticHand({ grip = 0.25, teal = false }: any) {
       />
 
       {[-0.22, -0.06, 0.1, 0.26].map((x, i) => (
-        <group key={i} position={[x, 0.11, 0.12]} rotation={[grip + i * 0.04, 0, 0]}>
+        <group 
+          key={i} 
+          ref={el => { fingersRef.current[i] = el! }}
+          position={[x, 0.11, 0.12]} 
+          rotation={[grip + i * 0.04, 0, 0]}
+        >
           <FingerSegment position={[0, 0, 0]} delay={i * 0.22} />
           <group position={[0, 0.38, 0]}>
             <FingerSegment position={[0, 0, 0]} length={0.28} delay={i * 0.3} rotation={[grip * 1.4, 0, 0]} />
@@ -157,12 +174,12 @@ function RobotArm({
     if (root.current) {
       root.current.rotation.y = THREE.MathUtils.lerp(
         root.current.rotation.y,
-        rotation[1] + Math.sin(t * 0.28) * 0.07 + mouse.x * 0.15,
+        rotation[1] + Math.sin(t * 0.28) * 0.07 + mouse.x * 0.3,
         0.04
       );
       root.current.rotation.z = THREE.MathUtils.lerp(
         root.current.rotation.z,
-        rotation[2] + Math.cos(t * 0.22) * 0.05 + mouse.y * 0.12,
+        rotation[2] + Math.cos(t * 0.22) * 0.05 + mouse.y * 0.2,
         0.04
       );
     }

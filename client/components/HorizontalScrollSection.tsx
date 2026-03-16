@@ -63,7 +63,7 @@ export default function HorizontalScrollSection({ team }: HorizontalScrollSectio
   return (
     <div
       ref={containerRef}
-      className="relative text-white"
+      className="relative text-white pointer-events-none"
       style={{ height: `${Math.max(400, team.length * 80)}vh` }}
     >
 

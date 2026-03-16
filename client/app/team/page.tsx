@@ -39,7 +39,7 @@ export default function TeamPage() {
         <IntroAnimation />
       </motion.div>
 
-      <div className="relative z-[200]">
+      <div className="relative z-[200] pointer-events-none">
         {team.length === 0 ? (
           <div className="min-h-screen flex items-center justify-center text-zinc-500 uppercase tracking-widest text-xs">
             Initialising Threads...
