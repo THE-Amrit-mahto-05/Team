@@ -2,10 +2,6 @@
 
 A cinematic, interactive Team Page built for Armatrix. Featuring a 3D robotic background, a "hacker HUD" aesthetic, and a full team management system.
 
-## 🚀 Deployed Links
-- **Frontend (Vercel):** [Coming Soon]
-- **Backend (Render):** https://armatrix-team-page-7inp.onrender.com
-- **API Documentation:** https://armatrix-team-page-7inp.onrender.com/docs
 
 ##  Setup Instructions
 
