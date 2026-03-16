@@ -1,53 +1,22 @@
+import json
+import os
 import uuid
+from typing import List
 from models import TeamMember
 
-team_members = [
-    TeamMember(
-        id=str(uuid.uuid4()),
-        name="Arjun Rao",
-        role="Controls Engineer",
-        bio="Specializes in non-linear control systems and dynamic balancing for bipedal robots.",
-        photo_url="https://randomuser.me/api/portraits/men/32.jpg",
-        linkedin="https://linkedin.com"
-    ),
-    TeamMember(
-        id=str(uuid.uuid4()),
-        name="Sarah Chen",
-        role="Computer Vision Lead",
-        bio="Architecting visual SLAM pipelines and real-time object detection models.",
-        photo_url="https://randomuser.me/api/portraits/women/44.jpg",
-        linkedin="https://linkedin.com"
-    ),
-    TeamMember(
-        id=str(uuid.uuid4()),
-        name="Marcus Johnson",
-        role="Hardware Architect",
-        bio="Designs lightweight, high-torque actuator systems and custom PCB layouts.",
-        photo_url="https://randomuser.me/api/portraits/men/86.jpg",
-        linkedin="https://linkedin.com"
-    ),
-    TeamMember(
-        id=str(uuid.uuid4()),
-        name="Elena Vasquez",
-        role="Machine Learning Researcher",
-        bio="Focuses on reinforcement learning for autonomous locomotion and grasping.",
-        photo_url="https://randomuser.me/api/portraits/women/68.jpg",
-        linkedin="https://linkedin.com"
-    ),
-    TeamMember(
-        id=str(uuid.uuid4()),
-        name="David Kim",
-        role="Software Systems Engineer",
-        bio="Building the low-latency communication middleware and core engine.",
-        photo_url="https://randomuser.me/api/portraits/men/55.jpg",
-        linkedin="https://linkedin.com"
-    ),
-    TeamMember(
-        id=str(uuid.uuid4()),
-        name="Aisha Patel",
-        role="Product Manager",
-        bio="Translating complex robotic capabilities into seamless human-centered experiences.",
-        photo_url="https://randomuser.me/api/portraits/women/32.jpg",
-        linkedin="https://linkedin.com"
-    )
-]
+DATA_FILE = os.path.join(os.path.dirname(__file__), "members.json")
+
+def load_members() -> List[TeamMember]:
+    if not os.path.exists(DATA_FILE):
+        return []
+    
+    with open(DATA_FILE, "r") as f:
+        data = json.load(f)
+        return [TeamMember(**member) for member in data]
+
+def save_members(members: List[TeamMember]):
+    with open(DATA_FILE, "w") as f:
+        json.dump([member.model_dump() for member in members], f, indent=4)
+
+# Global list initialized from file
+team_members = load_members()

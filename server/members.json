@@ -1,0 +1,50 @@
+[
+    {
+        "id": "53a6f316-9e1f-4c2a-af0e-51fbec01d4d3",
+        "name": "Arjun Rao",
+        "role": "Controls Engineer",
+        "bio": "Specializes in non-linear control systems and dynamic balancing for bipedal robots.",
+        "photo_url": "https://randomuser.me/api/portraits/men/32.jpg",
+        "linkedin": "https://linkedin.com"
+    },
+    {
+        "id": "adc83d5f-e71f-4ae5-8183-21c0517e3ab6",
+        "name": "Elena Vasquez",
+        "role": "Machine Learning Researcher",
+        "bio": "Focuses on reinforcement learning for autonomous locomotion and grasping.",
+        "photo_url": "https://randomuser.me/api/portraits/women/68.jpg",
+        "linkedin": "https://linkedin.com"
+    },
+    {
+        "id": "a6717439-c4d7-4620-a869-82db127421cd",
+        "name": "Marcus Johnson",
+        "role": "Hardware Architect",
+        "bio": "Designs lightweight, high-torque actuator systems and custom PCB layouts.",
+        "photo_url": "https://randomuser.me/api/portraits/men/86.jpg",
+        "linkedin": "https://linkedin.com"
+    },
+    {
+        "id": "95aa1cee-9896-473c-ad93-e93262d90170",
+        "name": "Sarah Chen",
+        "role": "Computer Vision Lead",
+        "bio": "Architecting visual SLAM pipelines and real-time object detection models.",
+        "photo_url": "https://randomuser.me/api/portraits/women/44.jpg",
+        "linkedin": "https://linkedin.com"
+    },
+    {
+        "id": "ba627da3-da05-4e65-82e8-9df4a82b62f9",
+        "name": "David Kim",
+        "role": "Software Systems Engineer",
+        "bio": "Building the low-latency communication middleware and core engine.",
+        "photo_url": "https://randomuser.me/api/portraits/men/55.jpg",
+        "linkedin": "https://linkedin.com"
+    },
+    {
+        "id": "7d8d7738-2a63-43fc-ab4e-d6e11cb16d7a",
+        "name": "Aisha Patel",
+        "role": "Product Manager",
+        "bio": "Translating complex robotic capabilities into seamless human-centered experiences.",
+        "photo_url": "https://randomuser.me/api/portraits/women/32.jpg",
+        "linkedin": "https://linkedin.com"
+    }
+]

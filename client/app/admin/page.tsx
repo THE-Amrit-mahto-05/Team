@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getTeam, addMember, updateMember, deleteMember, TeamMember } from "@/lib/api";
+import { getTeam, addMember, updateMember, deleteMember, TeamMember, reorderTeam } from "@/lib/api";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function AdminPage() {
@@ -26,6 +26,25 @@ export default function AdminPage() {
       setTeam(res.data);
     } catch (err) {
       console.error("Failed to fetch team:", err);
+    }
+  };
+
+  const handleReorder = async (currentIndex: number, direction: "up" | "down") => {
+    const newTeam = [...team];
+    const targetIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
+
+    if (targetIndex < 0 || targetIndex >= newTeam.length) return;
+
+    // Swap items
+    [newTeam[currentIndex], newTeam[targetIndex]] = [newTeam[targetIndex], newTeam[currentIndex]];
+    
+    setTeam(newTeam); // Optimistic update
+
+    try {
+      await reorderTeam(newTeam.map(m => m.id));
+    } catch (err) {
+      console.error("Failed to reorder team:", err);
+      fetchTeam(); // Rollback on error
     }
   };
 
@@ -59,13 +78,11 @@ export default function AdminPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this member?")) {
-      try {
-        await deleteMember(id);
-        fetchTeam();
-      } catch (err) {
-        console.error("Failed to delete member:", err);
-      }
+    try {
+      await deleteMember(id);
+      fetchTeam();
+    } catch (err) {
+      console.error("Failed to delete member:", err);
     }
   };
 
@@ -168,12 +185,28 @@ export default function AdminPage() {
         </AnimatePresence>
 
         <div className="grid gap-4">
-          {team.map((member) => (
+          {team.map((member, index) => (
             <div
               key={member.id}
               className="flex items-center justify-between p-6 bg-zinc-900/30 border border-white/5 hover:border-teal-500/20 transition-all group"
             >
               <div className="flex items-center gap-6">
+                <div className="flex flex-col gap-1 mr-2 invisible group-hover:visible">
+                  <button 
+                    onClick={() => handleReorder(index, "up")}
+                    disabled={index === 0}
+                    className="p-1 hover:text-teal-400 disabled:opacity-0 transition-colors"
+                  >
+                    ▲
+                  </button>
+                  <button 
+                    onClick={() => handleReorder(index, "down")}
+                    disabled={index === team.length - 1}
+                    className="p-1 hover:text-teal-400 disabled:opacity-0 transition-colors"
+                  >
+                    ▼
+                  </button>
+                </div>
                 <div className="w-12 h-12 rounded-full overflow-hidden border border-teal-500/20">
                   <img src={member.photo_url} alt="" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
                 </div>
