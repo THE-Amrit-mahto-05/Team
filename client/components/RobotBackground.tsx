@@ -258,7 +258,7 @@ function AnimatedText3D() {
   );
 }
 
-export default function RobotBackground() {
+export default function RobotBackground({ showTitle = true }: { showTitle?: boolean }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
 
@@ -299,7 +299,7 @@ export default function RobotBackground() {
         <pointLight position={[-9, -2, 3]} intensity={500} color="#aabbd0" />
 
         {/* 3D TITLE */}
-        <AnimatedText3D />
+        {showTitle && <AnimatedText3D />}
 
 
         <Float speed={0.7} rotationIntensity={0.06} floatIntensity={0.18}>

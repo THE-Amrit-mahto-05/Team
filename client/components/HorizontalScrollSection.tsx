@@ -79,7 +79,8 @@ export default function HorizontalScrollSection({ team }: HorizontalScrollSectio
           x: smoothX,
           y: smoothY,
           scale: titleScale,
-          transformOrigin: "left top"
+          transformOrigin: "left top",
+          opacity: contentOpacity
         }}
         className="fixed z-[100] pointer-events-none whitespace-nowrap flex flex-col items-start"
       >

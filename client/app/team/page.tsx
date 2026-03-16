@@ -23,7 +23,7 @@ export default function TeamPage() {
 
   return (
     <main className="min-h-screen text-white relative bg-black">
-      <RobotBackground />
+      <RobotBackground showTitle={false} />
       <div className="fixed inset-0 z-0">
         <TechBackground />
       </div>
