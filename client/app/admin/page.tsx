@@ -20,6 +20,8 @@ export default function AdminPage() {
     try {
       const res = await getTeam();
       setTeam(res.data);
+      // Update cache so TeamPage reflects changes immediately
+      localStorage.setItem("cached_team_data", JSON.stringify(res.data));
     } catch (err) {
       console.error("Failed to fetch team:", err);
     }
@@ -41,12 +43,14 @@ export default function AdminPage() {
     [newTeam[currentIndex], newTeam[targetIndex]] = [newTeam[targetIndex], newTeam[currentIndex]];
     
     setTeam(newTeam); // Optimistic update
+    // Update cache optimistically
+    localStorage.setItem("cached_team_data", JSON.stringify(newTeam));
 
     try {
       await reorderTeam(newTeam.map(m => m.id));
     } catch (err) {
       console.error("Failed to reorder team:", err);
-      fetchTeam(); // Rollback on error
+      fetchTeam(); // Rollback on error and re-cache
     }
   };
 
