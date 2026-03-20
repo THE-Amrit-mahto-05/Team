@@ -5,13 +5,21 @@ import { PerspectiveCamera, Float, Text3D, Center } from "@react-three/drei";
 import { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
 
+interface FingerSegmentProps {
+  position: [number, number, number];
+  length?: number;
+  width?: number;
+  rotation?: [number, number, number];
+  delay?: number;
+}
+
 function FingerSegment({
   position,
   length = 0.38,
   width = 0.055,
   rotation = [0, 0, 0],
   delay = 0,
-}: any) {
+}: FingerSegmentProps) {
   const g = useRef<THREE.Group>(null);
   useFrame(({ clock }) => {
     if (g.current) {
@@ -36,9 +44,14 @@ function FingerSegment({
   );
 }
 
-function RoboticHand({ grip = 0.25, teal = false }: any) {
+interface RoboticHandProps {
+  grip?: number;
+  teal?: boolean;
+}
+
+function RoboticHand({ grip = 0.25, teal = false }: RoboticHandProps) {
   const g = useRef<THREE.Group>(null);
-  const fingersRef = useRef<THREE.Group[]>([]);
+  const fingersRef = useRef<(THREE.Group | null)[]>([]);
   const palmColor = "#e8edf2";
   const accentColor = "#c8d0d8";
 
@@ -100,7 +113,7 @@ function RoboticHand({ grip = 0.25, teal = false }: any) {
       {[-0.22, -0.06, 0.1, 0.26].map((x, i) => (
         <group 
           key={i} 
-          ref={el => { fingersRef.current[i] = el! }}
+          ref={el => { fingersRef.current[i] = el; }}
           position={[x, 0.11, 0.12]} 
           rotation={[grip + i * 0.04, 0, 0]}
         >
@@ -132,7 +145,13 @@ function RoboticHand({ grip = 0.25, teal = false }: any) {
   );
 }
 
-function JointRing({ r = 0.38, h = 0.45, color = "#c8d0d8" }: any) {
+interface JointRingProps {
+  r?: number;
+  h?: number;
+  color?: string;
+}
+
+function JointRing({ r = 0.38, h = 0.45, color = "#c8d0d8" }: JointRingProps) {
   return (
     <mesh rotation={[Math.PI / 2, 0, 0]}>
       <cylinderGeometry args={[r, r * 0.9, h, 28]} />
@@ -141,7 +160,14 @@ function JointRing({ r = 0.38, h = 0.45, color = "#c8d0d8" }: any) {
   );
 }
 
-function ArmTube({ length = 2.6, width = 0.38, color = "#e8edf2", pistonColor = "#c8d0d8" }: any) {
+interface ArmTubeProps {
+  length?: number;
+  width?: number;
+  color?: string;
+  pistonColor?: string;
+}
+
+function ArmTube({ length = 2.6, width = 0.38, color = "#e8edf2", pistonColor = "#c8d0d8" }: ArmTubeProps) {
   return (
     <group>
       <mesh position={[0, length / 2, 0]} castShadow>
@@ -156,14 +182,23 @@ function ArmTube({ length = 2.6, width = 0.38, color = "#e8edf2", pistonColor = 
   );
 }
 
+interface RobotArmProps {
+  position?: [number, number, number];
+  rotation?: [number, number, number];
+  scale?: number;
+  teal?: boolean;
+  handGrip?: number;
+  phase?: number;
+}
+
 function RobotArm({
-  position = [0, 0, 0] as [number, number, number],
-  rotation = [0, 0, 0] as [number, number, number],
+  position = [0, 0, 0],
+  rotation = [0, 0, 0],
   scale = 1,
   teal = false,
   handGrip = 0.25,
   phase = 0,
-}: any) {
+}: RobotArmProps) {
   const root = useRef<THREE.Group>(null);
   const j1 = useRef<THREE.Group>(null);
   const j2 = useRef<THREE.Group>(null);
@@ -277,7 +312,17 @@ function AnimatedText3D() {
 
 export default function RobotBackground({ showTitle = true }: { showTitle?: boolean }) {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   if (!mounted) return <div className="absolute inset-0 bg-black" />;
 
@@ -286,7 +331,7 @@ export default function RobotBackground({ showTitle = true }: { showTitle?: bool
       className="absolute inset-0 z-0 overflow-hidden bg-black"
     >
       <Canvas shadows gl={{ antialias: true, alpha: true }}>
-        <PerspectiveCamera makeDefault position={[0, 0, 14]} fov={52} />
+        <PerspectiveCamera makeDefault position={[0, 0, 14]} fov={isMobile ? 75 : 52} />
 
         <ambientLight intensity={0.3} color="#ffffff" />
 
@@ -320,14 +365,14 @@ export default function RobotBackground({ showTitle = true }: { showTitle?: bool
 
 
         <Float speed={0.7} rotationIntensity={0.06} floatIntensity={0.18}>
-          <group position={[10, -6.5, -2]} rotation={[-0.18, -1.05, 0.22]}>
-            <RobotArm scale={2.05} teal handGrip={0.18} phase={0} />
+          <group position={[isMobile ? 6 : 10, -6.5, -2]} rotation={[-0.18, -1.05, 0.22]}>
+            <RobotArm scale={isMobile ? 1.5 : 2.05} teal handGrip={0.18} phase={0} />
           </group>
         </Float>
 
         <Float speed={0.65} rotationIntensity={0.07} floatIntensity={0.2}>
-          <group position={[-10, -6.5, -2]} rotation={[-0.18, 1.05, -0.22]}>
-            <RobotArm scale={2.05} teal handGrip={0.2} phase={2.5} />
+          <group position={[isMobile ? -6 : -10, -6.5, -2]} rotation={[-0.18, 1.05, -0.22]}>
+            <RobotArm scale={isMobile ? 1.5 : 2.05} teal handGrip={0.2} phase={2.5} />
           </group>
         </Float>
 

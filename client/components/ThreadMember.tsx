@@ -17,9 +17,10 @@ interface ThreadMemberProps {
   member: TeamMember;
   yOffset: number;
   index: number;
+  isMobile?: boolean;
 }
 
-export default function ThreadMember({ member, yOffset, index }: ThreadMemberProps) {
+export default function ThreadMember({ member, yOffset, index, isMobile = false }: ThreadMemberProps) {
   const [isHovered, setIsHovered] = useState(false);
   const centerY = 350;
 
@@ -32,8 +33,8 @@ export default function ThreadMember({ member, yOffset, index }: ThreadMemberPro
         delay: (index % 5) * 0.1,
         ease: [0.16, 1, 0.3, 1]
       }}
-      className="absolute z-[150] w-40 h-40"
-      style={{
+      className={`${isMobile ? "relative" : "absolute"} z-[150] w-32 h-32 md:w-40 md:h-40`}
+      style={isMobile ? {} : {
         left: "calc(45% - 50px)",
         top: `${centerY + yOffset - 10}px`,
         transform: "translate(-50%, -50%)"
@@ -43,9 +44,10 @@ export default function ThreadMember({ member, yOffset, index }: ThreadMemberPro
         <motion.div
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
+          onClick={() => isMobile && setIsHovered(!isHovered)}
           className="relative z-10 group w-full h-full rounded-full cursor-pointer pointer-events-auto"
         >
-          <div className="w-40 h-40 rounded-full border-2 border-teal-500/20 bg-zinc-950 overflow-hidden p-1 group-hover:border-teal-400/50 transition-all duration-500 shadow-2xl relative">
+          <div className="w-32 h-32 md:w-40 md:h-40 rounded-full border-2 border-teal-500/20 bg-zinc-950 overflow-hidden p-1 group-hover:border-teal-400/50 transition-all duration-500 shadow-2xl relative">
             <div className="w-full h-full rounded-full overflow-hidden relative transition-all duration-700 opacity-100">
               <Image
                 src={member.photo_url}
@@ -117,10 +119,10 @@ export default function ThreadMember({ member, yOffset, index }: ThreadMemberPro
         <AnimatePresence>
           {isHovered && (
             <motion.div
-              initial={{ opacity: 0, x: 20, filter: "blur(10px)" }}
-              animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, x: 20, filter: "blur(10px)" }}
-              className="absolute left-[calc(100%+2rem)] top-1/2 -translate-y-1/2 w-72 pointer-events-none z-50"
+              initial={{ opacity: 0, x: isMobile ? 0 : 20, y: isMobile ? 20 : 0, filter: "blur(10px)" }}
+              animate={{ opacity: 1, x: 0, y: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, x: isMobile ? 0 : 20, y: isMobile ? 20 : 0, filter: "blur(10px)" }}
+              className={`absolute ${isMobile ? "left-1/2 top-[calc(100%+1rem)] -translate-x-1/2" : "left-[calc(100%+2rem)] top-1/2 -translate-y-1/2"} w-[280px] md:w-72 pointer-events-none z-50`}
             >
               <div className="relative overflow-hidden bg-zinc-900/40 backdrop-blur-2xl border border-teal-500/30 p-5 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)]">
                 {/* HUD Scanner Line Animation */}

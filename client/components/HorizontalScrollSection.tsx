@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { TeamMember } from "@/lib/api";
 import ThreadMember from "./ThreadMember";
 import ThreadConnection from "./ThreadConnection";
@@ -43,16 +43,35 @@ export default function HorizontalScrollSection({ team }: HorizontalScrollSectio
   const backgroundOpacity = useTransform(scrollYProgress, [0.02, 0.1], [0, 1]);
   const contentOpacity = useTransform(scrollYProgress, [0.03, 0.12], [0, 1]);
 
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   if (isMobile) {
     return (
       <div className="relative pt-32 pb-20 px-6 max-w-lg mx-auto overflow-visible">
-        <h1 className="text-6xl font-bold tracking-tighter uppercase mb-16 text-center">OUR TEAM</h1>
-        <div className="flex flex-col gap-40 items-center">
+        <motion.h1 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-6xl font-bold tracking-tighter uppercase mb-24 text-center text-teal-500"
+        >
+          OUR TEAM
+        </motion.h1>
+        <div className="flex flex-col gap-48 items-center relative">
+          {/* Vertical Connection Line for Mobile */}
+          <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[1px] bg-gradient-to-b from-teal-500/0 via-teal-500/20 to-teal-500/0 z-0" />
+          
           {team.map((member, index) => (
-            <div key={member.id} className="relative h-[200px] w-full flex items-center justify-center">
-               <ThreadMember member={member} yOffset={0} index={index} />
+            <div key={member.id} className="relative w-full flex items-center justify-center z-10">
+               <ThreadMember member={member} yOffset={0} index={index} isMobile />
             </div>
           ))}
         </div>
