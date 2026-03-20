@@ -315,11 +315,15 @@ export default function RobotBackground({ showTitle = true }: { showTitle?: bool
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    checkMobile();
+
+    requestAnimationFrame(() => {
+      setMounted(true);
+      checkMobile();
+    });
+
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
@@ -365,14 +369,14 @@ export default function RobotBackground({ showTitle = true }: { showTitle?: bool
 
 
         <Float speed={0.7} rotationIntensity={0.06} floatIntensity={0.18}>
-          <group position={[isMobile ? 6 : 10, -6.5, -2]} rotation={[-0.18, -1.05, 0.22]}>
-            <RobotArm scale={isMobile ? 1.5 : 2.05} teal handGrip={0.18} phase={0} />
+          <group position={[isMobile ? 12 : 10, -6.5, -2]} rotation={[-0.18, -1.05, 0.22]}>
+            <RobotArm scale={isMobile ? 1.2 : 2.05} teal handGrip={0.18} phase={0} />
           </group>
         </Float>
 
         <Float speed={0.65} rotationIntensity={0.07} floatIntensity={0.2}>
-          <group position={[isMobile ? -6 : -10, -6.5, -2]} rotation={[-0.18, 1.05, -0.22]}>
-            <RobotArm scale={isMobile ? 1.5 : 2.05} teal handGrip={0.2} phase={2.5} />
+          <group position={[isMobile ? -12 : -10, -6.5, -2]} rotation={[-0.18, 1.05, -0.22]}>
+            <RobotArm scale={isMobile ? 1.2 : 2.05} teal handGrip={0.2} phase={2.5} />
           </group>
         </Float>
 

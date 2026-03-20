@@ -16,7 +16,7 @@ export default function TeamPage() {
   
   const introOpacity = useTransform(scrollY, [0, 400], [1, 0])
   const introScale = useTransform(scrollY, [0, 400], [1, 0.8])
-  const introPointerEvents = useTransform(scrollY, (v) => v > 50 ? "none" : ("auto" as const))
+  const introPointerEvents = useTransform(scrollY, (v) => v > (typeof window !== 'undefined' && window.innerWidth < 768 ? 10 : 50) ? "none" : ("auto" as const))
 
   useEffect(() => {
     // 1. Check Cache
@@ -74,9 +74,9 @@ export default function TeamPage() {
         <IntroAnimation />
       </motion.div>
 
-      <div className="relative z-[200] pointer-events-none">
+      <div className="relative z-[200]">
         {team.length === 0 ? (
-          <div className="min-h-screen flex flex-col items-center justify-center">
+          <div className="min-h-screen flex flex-col items-center justify-center pointer-events-none">
             <div className="relative w-24 h-24 mb-8">
               {/* Cinematic Spinner */}
               <motion.div 
@@ -103,10 +103,10 @@ export default function TeamPage() {
             </motion.div>
           </div>
         ) : (
-          <>
+          <div className="pointer-events-none [&>*]:pointer-events-auto">
             <HorizontalScrollSection team={team} />
 
-            <section className="h-screen flex items-center justify-center relative border-t border-white/5">
+            <section className="h-screen flex items-center justify-center relative border-t border-white/5 pointer-events-auto">
               <div className="text-center">
                 <h2 className="text-4xl font-bold tracking-tighter mb-6 uppercase">Ready to join?</h2>
                 <div className="px-8 py-3 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 transition-colors cursor-pointer text-xs uppercase tracking-widest inline-block">
@@ -114,7 +114,7 @@ export default function TeamPage() {
                 </div>
               </div>
             </section>
-          </>
+          </div>
         )}
       </div>
     </main>
